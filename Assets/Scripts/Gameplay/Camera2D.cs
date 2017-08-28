@@ -8,13 +8,19 @@ using UnityEngine;
  **/
 public class Camera2D : MonoBehaviour
 {
-	[SerializeField] float followSpeed;
-	[SerializeField] float zoomFactor = 1.0f;
-	[SerializeField] float zoomSpeed  = 5.0f;
-	[SerializeField] Transform trackingTarget;
+	[SerializeField] private float followSpeed;
+	[SerializeField] private float zoomFactor = 10.0f;
+	[SerializeField] private float zoomSpeed  = 5.0f;
+	[SerializeField] private Transform trackingTarget;
+	[SerializeField] private List<Transform> lanes;
+	[SerializeField] private float xOffset;
+	[SerializeField] private float yOffset; 
+	[SerializeField] private bool isXLocked = false;
+	[SerializeField] private bool isYLocked = false;
 
 	private Camera mainCamera;
 	private Transform player;
+
 
 	void Awake()
 	{
@@ -23,18 +29,50 @@ public class Camera2D : MonoBehaviour
 		SetZoom(zoomFactor);
 	}
 
-	// Follow trackingTarget (player by default)
 	void Update()
 	{
 		if (trackingTarget == null)
 			trackingTarget = player;
-		
-		float xTarget = trackingTarget.position.x;
-		float yTarget = trackingTarget.position.y;
+			
+		float xTarget = trackingTarget.position.x + xOffset;
+		float yTarget = trackingTarget.position.y + yOffset;
 
-		float xNew = Mathf.Lerp (transform.position.x, xTarget, Time.deltaTime * followSpeed);
-		float yNew = Mathf.Lerp (transform.position.y, yTarget, Time.deltaTime * followSpeed);
-	
+		float xNew = transform.position.x;
+		if (!isXLocked)
+		{
+			xNew = Mathf.Lerp(transform.position.x, xTarget, Time.deltaTime * followSpeed);
+		}
+
+		float yNew = transform.position.y;
+		if (!isYLocked)
+		{
+			yNew = Mathf.Lerp (transform.position.y, yTarget, Time.deltaTime * followSpeed);
+		}
+		else
+		{
+			if (lanes.Count > 1)
+			{
+				int i = 0;
+				for (i = 0; i < lanes.Count - 1; ++i)
+				{
+					if ((trackingTarget.position.y > lanes [i].position.y) &&
+						(trackingTarget.position.y <= lanes [i + 1].position.y))
+					{
+						yNew = lanes [i].position.y;
+						break;
+					}
+				}
+
+				if (i == lanes.Count - 1)
+					yNew = lanes [lanes.Count - 1].position.y;
+			}
+			else
+			{
+				yNew = lanes [0].position.y;
+			}
+		}
+
+		yNew = Mathf.Lerp(transform.position.y, yNew + yOffset, Time.deltaTime * followSpeed);
 		transform.position = new Vector3(xNew, yNew, transform.position.z);
 	}
 		
@@ -66,5 +104,10 @@ public class Camera2D : MonoBehaviour
 	public void SetTrackingTarget(Transform newTarget)
 	{
 		trackingTarget = newTarget;
+	}
+
+	public Transform GetTrackingTarget()
+	{
+		return trackingTarget;
 	}
 }
