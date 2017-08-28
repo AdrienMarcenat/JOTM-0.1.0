@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Simple camera scripts, should be attach to the main Camera.
+ * It provides a tracking method, and a zoom method.
+ **/
 public class Camera2D : MonoBehaviour
 {
 	[SerializeField] float followSpeed;
@@ -19,6 +23,7 @@ public class Camera2D : MonoBehaviour
 		SetZoom(zoomFactor);
 	}
 
+	// Follow trackingTarget (player by default)
 	void Update()
 	{
 		if (trackingTarget == null)
