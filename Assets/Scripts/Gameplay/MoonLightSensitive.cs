@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoonLightSensitive : MonoBehaviour {
-
+public class MoonLightSensitive : MonoBehaviour 
+{
 	public List<GameObject> PresentVersions;
 	public List<GameObject> PastVersions;
 
@@ -36,8 +36,8 @@ public class MoonLightSensitive : MonoBehaviour {
 		isInMoonLight = false;
 	}
 
-	public void SetIsInMoonLight(bool isInMoonLight)
+	public void OnMoonlight()
 	{
-		this.isInMoonLight = isInMoonLight;
+		this.isInMoonLight = true;
 	}
 }
