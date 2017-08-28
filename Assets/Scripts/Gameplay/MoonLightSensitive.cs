@@ -4,27 +4,46 @@ using UnityEngine;
 
 public class MoonLightSensitive : MonoBehaviour 
 {
-	public List<GameObject> PresentVersions;
-	public List<GameObject> PastVersions;
+	private GameObject presentVersion;
+	private GameObject pastVersion;
+	private FSM presentFSM;
+	private FSM pastFSM;
 
 	private bool isInMoonLight = false;
 	private bool isInThePast = false;
-	private int versionIndex = 0;
+
+	void Awake()
+	{
+		presentVersion = transform.Find ("PresentVersion").gameObject;
+		pastVersion = transform.Find ("PastVersion").gameObject;
+		presentFSM = presentVersion.GetComponent<FSM> ();
+		pastFSM = pastVersion.GetComponent<FSM> ();
+	}
+
+	void OnEnable()
+	{
+		pastFSM.FSMChange += presentFSM.AddChange;
+	}
+
+	void OnDisable()
+	{
+		pastFSM.FSMChange -= presentFSM.AddChange;
+	}
 
 	private void OnMoonLightEnter()
 	{
 		isInThePast = true;
 		print(gameObject.name + " enters MoonLight");
-		PresentVersions [versionIndex].SetActive (false);
-		PastVersions [versionIndex].SetActive (true);
+		presentVersion.SetActive (false);
+		pastVersion.SetActive (true);
 	}
 
 	private void OnMoonLightExit()
 	{
 		isInThePast = false;
 		print(gameObject.name + " exits MoonLight");
-		PresentVersions [versionIndex].SetActive (true);
-		PastVersions [versionIndex].SetActive (false);
+		presentVersion.SetActive (true);
+		pastVersion.SetActive (false);
 	}
 
 	void LateUpdate () 

@@ -9,6 +9,9 @@ using System.Collections.Generic;
  **/
 public class FSM : MonoBehaviour
 {
+	public delegate void FSMAction(PendingChange order);
+	public event FSMAction FSMChange;
+
 	// The states will send orders to the stack
 	public enum Action
 	{
@@ -22,7 +25,7 @@ public class FSM : MonoBehaviour
 	 * Orders are stored in a list and applied
 	 * when each states have been updated.
 	 **/
-	private struct PendingChange
+	public struct PendingChange
 	{
 		public Action action;
 		public int stateID;
@@ -30,7 +33,7 @@ public class FSM : MonoBehaviour
 		public PendingChange(Action a, int ID = 0)
 		{
 			action = a;
-			stateID = ID;
+			stateID = ID;	
 		}
 	};
 
@@ -68,19 +71,26 @@ public class FSM : MonoBehaviour
 
 	public void PushState(int stateID)
 	{
-		pendingList.Add(new PendingChange(Action.Push, stateID));
+		AddChange(new PendingChange(Action.Push, stateID));
 	}
 
 	public void PopState()
 	{
 		if (IsEmpty())
 			return;
-		pendingList.Add(new PendingChange(Action.Pop));
+		AddChange(new PendingChange(Action.Pop));
 	}
 
 	public void ClearStates()
 	{
-		pendingList.Add(new PendingChange(Action.Clear));
+		AddChange(new PendingChange(Action.Clear));
+	}
+
+	public void AddChange(PendingChange change)
+	{
+		pendingList.Add (change);
+		if(FSMChange != null)
+			FSMChange (change);
 	}
 
 	public bool IsEmpty()
