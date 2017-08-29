@@ -28,8 +28,8 @@ public abstract class FSMState : MonoBehaviour
 	// Enter is called when the state is pushed.
 	public virtual void Enter () {}
 
-	// Update is called when the state is in the stack and no higher state return true.
-	public virtual bool Update () { return false; }
+	// UpdateState is called when the state is in the stack and no higher state return true.
+	public virtual bool UpdateState () { return false; }
 
 	// Exit is called when the state is popped
 	public virtual void Exit () {}

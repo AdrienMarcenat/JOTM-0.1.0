@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerNormalState : FSMState
 {
 	private PlayerInputManager playerInputManager;
-	private PlayerController body;
+	private PlayerController playerController;
 
 
 	protected override void Awake()
@@ -13,17 +13,17 @@ public class PlayerNormalState : FSMState
 		base.Awake ();
 	
 		playerInputManager = GetComponent<PlayerInputManager> ();
-		body               = GetComponent<PlayerController> ();
+		playerController   = GetComponent<PlayerController> ();
 	}
 
 	public override void Enter ()
 	{
-		playerInputManager.Move += body.Move;
+		playerInputManager.Move += playerController.Move;
 	}
 
 	public override void Exit ()
 	{
-		playerInputManager.Move -= body.Move;
+		playerInputManager.Move -= playerController.Move;
 	}
 
 	private void GameOver()

@@ -63,7 +63,7 @@ public class FSM : MonoBehaviour
 	{
 		foreach(FSMState state in stateStack)
 		{
-			if (state.Update ())
+			if (state.UpdateState ())
 				break;
 		}
 		ApplyPendingChanges ();

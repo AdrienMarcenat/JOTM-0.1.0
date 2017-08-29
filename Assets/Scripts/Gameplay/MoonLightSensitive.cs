@@ -11,6 +11,7 @@ public class MoonLightSensitive : MonoBehaviour
 
 	private bool isInMoonLight = false;
 	private bool isInThePast = false;
+	private int presentLayer;
 
 	void Awake()
 	{
@@ -34,7 +35,8 @@ public class MoonLightSensitive : MonoBehaviour
 	{
 		isInThePast = true;
 		print(gameObject.name + " enters MoonLight");
-		presentVersion.SetActive (false);
+		presentLayer = presentVersion.layer;
+		presentVersion.layer = 10;
 		pastVersion.SetActive (true);
 	}
 
@@ -42,8 +44,14 @@ public class MoonLightSensitive : MonoBehaviour
 	{
 		isInThePast = false;
 		print(gameObject.name + " exits MoonLight");
-		presentVersion.SetActive (true);
+		presentVersion.layer = presentLayer;
 		pastVersion.SetActive (false);
+	}
+
+	void Update()
+	{
+		if (isInThePast)
+			presentVersion.transform.position = pastVersion.transform.position;
 	}
 
 	void LateUpdate () 
