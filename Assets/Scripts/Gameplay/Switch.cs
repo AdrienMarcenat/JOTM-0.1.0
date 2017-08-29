@@ -16,14 +16,12 @@ public class Switch : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		print ("enter " + other.tag);
 		if (other.tag == "Player")
 			isPlayerIn = true;
 	}
 
 	void OnTriggerExit2D(Collider2D other)
 	{
-		print ("exit " + other.tag);
 		if (other.tag == "Player")
 			isPlayerIn = false;
 	}

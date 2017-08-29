@@ -34,6 +34,9 @@ public abstract class FSMState : MonoBehaviour
 	// Exit is called when the state is popped
 	public virtual void Exit () {}
 
+	// Copy is called when the player goes in the past to override the present states
+	public virtual void Copy(FSMState state) {}
+
 	protected void requestStackPush(int stateID)
 	{
 		fsm.PushState (stateID);
@@ -47,6 +50,11 @@ public abstract class FSMState : MonoBehaviour
 	protected void requestStateClear()
 	{
 		fsm.ClearStates ();
+	}
+
+	public int GetID()
+	{
+		return ID;
 	}
 }
 

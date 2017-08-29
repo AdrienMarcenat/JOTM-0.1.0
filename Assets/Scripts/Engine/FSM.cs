@@ -111,20 +111,73 @@ public class FSM : MonoBehaviour
 			switch (change.action)
 			{
 			case Action.Push:
-				FSMState pushState = FindState (change.stateID);
-				pushState.Enter ();
-				stateStack.Push(pushState);
+				SafePush (change.stateID);
 				break;
 			case Action.Pop:
-				FSMState popState = stateStack.Pop ();
-				popState.Exit();
+				SafePop ();
 				break;
 			case Action.Clear:
-				stateStack.Clear ();
+				SafeClear ();
 				break;
 			}
 		}
 		pendingList.Clear();
+	}
+
+	public Hashtable GetFactory()
+	{
+		return factories;
+	}
+
+	public Stack<FSMState> GetStack()
+	{
+		return stateStack;
+	}
+
+	public List<PendingChange> GetPendingList()
+	{
+		return pendingList;
+	}
+
+	/**
+	 * The three following methods make sure that Exit() and Enter() methods are called
+	 * when pushing or poping a state, this is super important to avoid "ghost listener"
+	 * as unregistering is usually done in Exit().
+	 **/
+	private void SafeClear()
+	{
+		foreach(FSMState state in stateStack)
+			state.Exit ();
+		stateStack.Clear ();
+	}
+
+	private void SafePop()
+	{
+		FSMState popState = stateStack.Pop ();
+		popState.Exit();
+	}
+
+	private void SafePush(int stateID)
+	{
+		FSMState pushState = FindState (stateID);
+		pushState.Enter ();
+		stateStack.Push (pushState);
+	}
+
+	// Use when the player goes in the past to override the present states
+	public void CopyState(FSM fsm)
+	{
+		foreach (FSMState state in fsm.GetFactory().Values)
+			FindState (state.GetID ()).Copy (state);
+
+		SafeClear ();
+		FSMState[] states = fsm.GetStack ().ToArray ();
+		for (int i = states.Length - 1; i >= 0; i--)
+			SafePush (states [i].GetID ());
+
+		pendingList.Clear ();
+		foreach (PendingChange change in fsm.GetPendingList())
+			pendingList.Add (change);
 	}
 }
 

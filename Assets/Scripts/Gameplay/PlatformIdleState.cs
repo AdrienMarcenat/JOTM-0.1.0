@@ -23,7 +23,6 @@ public class PlatformIdleState : FSMState
 
 	private void Move()
 	{
-		print ("move");
 		requestStackPop ();
 		requestStackPush ((int)PlatformStates.ID.Moving);
 	}

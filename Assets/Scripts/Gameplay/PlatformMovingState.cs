@@ -38,18 +38,36 @@ public class PlatformMovingState : FSMState
 		platformSwitch.SwitchEvent -= ChangeDirection;
 	}
 
+	public override void Copy(FSMState state)
+	{
+		PlatformMovingState newState = (PlatformMovingState) state;
+		direction = newState.GetDirection (); 
+		pathIndex = newState.GetPathIndex ();
+	}
+
 	private void ChangeDirection()
 	{
+		print ("change");
 		direction *= -1;
 		pathIndex += direction;
 	}
 
 	private void StopMoving()
 	{
-		print ("StopMoving");
+		print ("stop");
 		ChangeDirection ();
 		requestStackPop ();
 		requestStackPush ((int)PlatformStates.ID.Idle);
+	}
+
+	public int GetDirection()
+	{
+		return direction;
+	}
+
+	public int GetPathIndex()
+	{
+		return pathIndex;
 	}
 }
 
