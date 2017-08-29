@@ -40,13 +40,13 @@ public class Camera2D : MonoBehaviour
 		float xNew = transform.position.x;
 		if (!isXLocked)
 		{
-			xNew = Mathf.Lerp(transform.position.x, xTarget, Time.deltaTime * followSpeed);
+			xNew = Mathf.Lerp(transform.position.x, xTarget, Time.unscaledDeltaTime * followSpeed);
 		}
 
 		float yNew = transform.position.y;
 		if (!isYLocked)
 		{
-			yNew = Mathf.Lerp (transform.position.y, yTarget, Time.deltaTime * followSpeed);
+			yNew = Mathf.Lerp (transform.position.y, yTarget, Time.unscaledDeltaTime * followSpeed);
 		}
 		else
 		{

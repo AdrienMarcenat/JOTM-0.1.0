@@ -45,9 +45,7 @@ public class PlayerInputManager : MonoBehaviour
 			Move (horizontal, jump, isGrounded);
 
 		if (Input.GetButtonDown ("Moonlight") && OnMoonLight != null)
-		{
 			OnMoonLight ();
-		}
 	}
 
 	void OnTriggerEnter2D (Collider2D other)

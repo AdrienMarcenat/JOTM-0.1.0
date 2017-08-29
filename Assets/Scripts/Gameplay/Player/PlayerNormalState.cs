@@ -5,7 +5,7 @@ public class PlayerNormalState : FSMState
 {
 	private PlayerInputManager playerInputManager;
 	private PlayerController playerController;
-
+	private Rigidbody2D body;
 
 	protected override void Awake()
 	{
@@ -14,16 +14,31 @@ public class PlayerNormalState : FSMState
 	
 		playerInputManager = GetComponent<PlayerInputManager> ();
 		playerController   = GetComponent<PlayerController> ();
+		body               = GetComponent<Rigidbody2D> ();
 	}
 
 	public override void Enter ()
 	{
 		playerInputManager.Move += playerController.Move;
+		PlayerInputManager.OnMoonLight += OnMoonLight;
 	}
 
 	public override void Exit ()
 	{
 		playerInputManager.Move -= playerController.Move;
+		PlayerInputManager.OnMoonLight -= OnMoonLight;
+	}
+
+	private void OnMoonLight()
+	{
+		StartCoroutine (StopBody ());
+	}
+
+	IEnumerator StopBody()
+	{
+		body.simulated = false;
+		yield return new WaitForSecondsRealtime (0.5f);
+		body.simulated = true;
 	}
 
 	private void GameOver()

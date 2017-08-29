@@ -47,14 +47,12 @@ public class PlatformMovingState : FSMState
 
 	private void ChangeDirection()
 	{
-		print ("change");
 		direction *= -1;
 		pathIndex += direction;
 	}
 
 	private void StopMoving()
 	{
-		print ("stop");
 		ChangeDirection ();
 		requestStackPop ();
 		requestStackPush ((int)PlatformStates.ID.Idle);
