@@ -16,11 +16,12 @@ public class MoonLightRayCaster : MonoBehaviour
 		int hitNumber = Physics2D.Raycast (transform.position, lightDirection, contactFilter, results, maxDistance);
 		Debug.DrawRay (transform.position, maxDistance*lightDirection, Color.red, 0.01f);
 
-		for (int i = 0; i < hitNumber; i++) 
-		{
-			RaycastHit2D raycast = results [i];
-			raycast.collider.gameObject.SendMessage ("OnMoonlight");
-		}
+		if(hitNumber > 0)
+			for (int i = 0; i < 1; i++) 
+			{
+				RaycastHit2D raycast = results [i];
+				raycast.collider.gameObject.SendMessage ("OnMoonlight");
+			}
 	}
 
 	void Update () 

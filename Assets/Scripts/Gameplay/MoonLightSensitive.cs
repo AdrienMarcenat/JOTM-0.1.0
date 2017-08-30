@@ -62,12 +62,6 @@ public class MoonLightSensitive : MonoBehaviour
 		pastVersion.SetActive (false);
 	}
 
-	void Update()
-	{
-		if (isInThePast)
-			presentVersion.transform.position = pastVersion.transform.position;
-	}
-
 	void LateUpdate () 
 	{
 		if (isInMoonLight && !isInThePast)

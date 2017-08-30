@@ -37,8 +37,10 @@ public class PlayerNormalState : FSMState
 	IEnumerator StopBody()
 	{
 		body.simulated = false;
+		playerInputManager.enabled  = false;
 		yield return new WaitForSecondsRealtime (0.5f);
 		body.simulated = true;
+		playerInputManager.enabled  = true;
 	}
 
 	private void GameOver()

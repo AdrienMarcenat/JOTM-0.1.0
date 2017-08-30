@@ -5,7 +5,7 @@ using UnityEngine.Collections;
 
 public class MoonLightManager : MonoBehaviour 
 {
-	[SerializeField] private List<MoonLightRayCaster> moonlightRayCasters;
+	private MoonLightRayCaster[] moonlightRayCasters;
 	private bool past = false;
 
 	void OnEnable()
@@ -18,24 +18,30 @@ public class MoonLightManager : MonoBehaviour
 		PlayerInputManager.OnMoonLight -= EnableLight;
 	}
 
-	public MoonLightManager()
+	void Awake()
 	{
-		moonlightRayCasters = new List<MoonLightRayCaster> ();
+		moonlightRayCasters = GetComponentsInChildren<MoonLightRayCaster>();
 	}
 
 	public void EnableLight()
 	{
-		if(past)
-			StartCoroutine (SpeedTime());
 		past = !past;
+		StartCoroutine (ChangeTimeScale());
 		foreach (MoonLightRayCaster rayCaster in moonlightRayCasters)
 			rayCaster.Enable();
 	}
 
-	IEnumerator SpeedTime()
+	/**
+	 * Going from past to present : 
+	 * speed time so the present reflect the consequences of the past
+	 * Going from past to present :
+	 * wait for the animation to finish
+	 */
+	IEnumerator ChangeTimeScale()
 	{
-		Time.timeScale = 99;
-		yield return new WaitForSeconds (2);
+		yield return null;
+		Time.timeScale = past ? 0 : 99;
+		yield return new WaitForSecondsRealtime (0.5f);
 		Time.timeScale = 1;
 	}
 }
