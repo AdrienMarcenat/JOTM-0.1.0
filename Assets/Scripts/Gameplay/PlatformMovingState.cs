@@ -44,6 +44,7 @@ public class PlatformMovingState : FSMState
 		PlatformMovingState newState = (PlatformMovingState) state;
 		direction = newState.GetDirection ();
 		pathIndex = newState.GetPathIndex ();
+		transform.position = state.gameObject.transform.position;
 	}
 
 	private void ChangeDirection()
