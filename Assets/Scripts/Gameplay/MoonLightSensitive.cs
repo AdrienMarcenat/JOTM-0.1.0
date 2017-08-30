@@ -15,8 +15,8 @@ public class MoonLightSensitive : MonoBehaviour
 
 	void Awake()
 	{
-		presentVersion = transform.Find ("PresentVersion").gameObject;
-		pastVersion = transform.Find ("PastVersion").gameObject;
+		presentVersion = transform.parent.Find ("PresentVersion").gameObject;
+		pastVersion = transform.parent.Find ("PastVersion").gameObject;
 
 		presentFSM = presentVersion.GetComponent<FSM> ();
 		pastFSM = pastVersion.GetComponent<FSM> ();

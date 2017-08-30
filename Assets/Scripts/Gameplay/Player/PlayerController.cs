@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {          
 	private Rigidbody2D rigidBody;
+	private Transform renderingTransform;
 	private bool facingRight = true;
 
 	[SerializeField] private float smoothSpeed;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
 	void Start ()
 	{
 		rigidBody = GetComponent <Rigidbody2D> ();
+		renderingTransform = transform.Find ("Rendering");
 	}
 
 	public void Move (float xDir, bool jump, bool isGrounded)
@@ -48,8 +50,8 @@ public class PlayerController : MonoBehaviour
 		facingRight = !facingRight;
 
 		// Multiply the player's x local scale by -1.
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
+		Vector3 renderingScale = renderingTransform.localScale;
+		renderingScale.x *= -1;
+		renderingTransform.localScale = renderingScale;
 	}
 }

@@ -5,7 +5,10 @@ using UnityEngine.Collections;
 
 public class MoonLightManager : MonoBehaviour 
 {
-	private MoonLightRayCaster[] moonlightRayCasters;
+	[SerializeField] private GameObject moonlightBakerPrefab;
+	[SerializeField] private Vector3 step;
+	[SerializeField] private float moonlightBakerNumber;
+	private MoonlightBaker[] moonlightBakers;
 	private bool past = false;
 
 	void OnEnable()
@@ -20,15 +23,21 @@ public class MoonLightManager : MonoBehaviour
 
 	void Awake()
 	{
-		moonlightRayCasters = GetComponentsInChildren<MoonLightRayCaster>();
+		for (int i = 0; i < moonlightBakerNumber; i++)
+		{
+			Instantiate (moonlightBakerPrefab, transform.position + i * step, new Quaternion (0, 0, 0, 0), transform);
+			if(i != 0)
+				Instantiate (moonlightBakerPrefab, transform.position - i * step, new Quaternion (0, 0, 0, 0), transform);
+		}
+		moonlightBakers = GetComponentsInChildren<MoonlightBaker>();
 	}
 
 	public void EnableLight()
 	{
 		past = !past;
 		StartCoroutine (ChangeTimeScale());
-		foreach (MoonLightRayCaster rayCaster in moonlightRayCasters)
-			rayCaster.Enable();
+		foreach (MoonlightBaker baker in moonlightBakers)
+			baker.Enable();
 	}
 
 	/**
