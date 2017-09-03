@@ -84,11 +84,5 @@ public class PlatformMovingState : FSMState
 		if(other.tag == "Player")
 			player.parent = null;
 	}
-
-	void OnDisable()
-	{
-		if(player != null)
-			player.parent = null;
-	}
 }
 

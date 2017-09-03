@@ -37,13 +37,13 @@ public class FSM : MonoBehaviour
 		}
 	};
 
-	private Stack<FSMState> stateStack;
-	private List<PendingChange> pendingList;
+	private Stack<FSMState> stateStack = new Stack<FSMState> ();
+	private List<PendingChange> pendingList = new List<PendingChange> ();
 	/**
 	 * The hastable maps a state ID with an instance of a state,
 	 * so a state is only instanciated at the beginning of the scene.
 	 **/
-	private Hashtable factories;
+	private Hashtable factories = new Hashtable ();
 
 
 	protected virtual void Awake()

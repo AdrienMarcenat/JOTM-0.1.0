@@ -40,26 +40,28 @@ public class MoonLightSensitive : MonoBehaviour
 	private void OnMoonLightEnter()
 	{
 		isInThePast = true;
-		//print(gameObject.name + " enters MoonLight");
-
 		// Move the present in background, it will still be simulated but not rendered
 		presentLayer = presentVersion.layer;
 		presentVersion.layer = 10;
 		// Override the present states with the past ones
 		presentFSM.CopyState(pastFSM);
-
 		pastVersion.SetActive (true);
 	}
 
 	private void OnMoonLightExit()
 	{
 		isInThePast = false;
-		//print(gameObject.name + " exits MoonLight");
-
 		// Restore the present's layer
 		presentVersion.layer = presentLayer;
-
 		pastVersion.SetActive (false);
+	}
+
+	void Update()
+	{
+		if (isInThePast)
+			transform.position = pastVersion.transform.position;
+		else
+			transform.position = presentVersion.transform.position;
 	}
 
 	void LateUpdate () 

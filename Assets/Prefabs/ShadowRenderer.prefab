@@ -9,50 +9,51 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1225846956928968}
+  m_RootGameObject: {fileID: 1396683765821182}
   m_IsPrefabParent: 1
---- !u!1 &1225846956928968
+--- !u!1 &1396683765821182
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4524333086997978}
-  - component: {fileID: 114198856306496050}
+  - component: {fileID: 4759228115533938}
+  - component: {fileID: 114416704593626168}
   m_Layer: 0
-  m_Name: MoonlightBaker
+  m_Name: ShadowRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4524333086997978
+--- !u!4 &4759228115533938
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1225846956928968}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 1396683765821182}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114198856306496050
+--- !u!114 &114416704593626168
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1225846956928968}
+  m_GameObject: {fileID: 1396683765821182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cefb835b3da57d041a64d916760d29b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 0379e1397ad15db49be1644e35714602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 20
-  lightDirection: {x: 0, y: -1, z: 0}
+  lightDirection: {fileID: 0}
+  raycastDistance: 30
+  raycastMargin: 0.05
   contactFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -67,5 +68,5 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  lightMaterial: {fileID: 2100000, guid: b0a95a22e23b6a54092969a96defeaf8, type: 2}
-  step: {x: 1, y: 0, z: 0}
+  shadowMaterial: {fileID: 2100000, guid: 69253bca13ff578488c4d38f52dbdb7a, type: 2}
+  boxCollider: {fileID: 0}

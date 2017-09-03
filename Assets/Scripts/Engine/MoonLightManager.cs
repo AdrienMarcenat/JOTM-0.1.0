@@ -5,10 +5,11 @@ using UnityEngine.Collections;
 
 public class MoonLightManager : MonoBehaviour 
 {
-	[SerializeField] private GameObject moonlightBakerPrefab;
+	[SerializeField] private GameObject moonLightRaycasterPrefab;
 	[SerializeField] private Vector3 step;
-	[SerializeField] private float moonlightBakerNumber;
-	private MoonlightBaker[] moonlightBakers;
+	[SerializeField] private int moonLightRaycasterNumber = 20;
+	[SerializeField] private ShadowRenderer shadowRenderer;
+	private MoonLightRayCaster[] raycasters;
 	private bool past = false;
 
 	void OnEnable()
@@ -23,21 +24,27 @@ public class MoonLightManager : MonoBehaviour
 
 	void Awake()
 	{
-		for (int i = 0; i < moonlightBakerNumber; i++)
+		for (int i = 0; i < moonLightRaycasterNumber; i++)
 		{
-			Instantiate (moonlightBakerPrefab, transform.position + i * step, new Quaternion (0, 0, 0, 0), transform);
-			if(i != 0)
-				Instantiate (moonlightBakerPrefab, transform.position - i * step, new Quaternion (0, 0, 0, 0), transform);
+			GameObject raycaster = Instantiate (moonLightRaycasterPrefab, transform);
+			raycaster.transform.position = i * step + transform.position;
+			if (i != 0)
+			{
+				GameObject mirrorRaycaster = Instantiate (moonLightRaycasterPrefab, transform);
+				mirrorRaycaster.transform.position = -i * step + transform.position;
+			}
 		}
-		moonlightBakers = GetComponentsInChildren<MoonlightBaker>();
+
+		raycasters = GetComponentsInChildren<MoonLightRayCaster> ();
 	}
 
 	public void EnableLight()
 	{
 		past = !past;
 		StartCoroutine (ChangeTimeScale());
-		foreach (MoonlightBaker baker in moonlightBakers)
-			baker.Enable();
+		shadowRenderer.Enable();
+		foreach (MoonLightRayCaster raycaster in raycasters)
+			raycaster.Enable ();
 	}
 
 	/**
