@@ -3,8 +3,9 @@ using System.Collections;
 
 public class PlayerInputManager : MonoBehaviour
 {
-	public delegate void MoonLightAction();
-	public static event MoonLightAction OnMoonLight;
+	public delegate void PressButtonAction();
+	public static event PressButtonAction OnMoonLight;
+	public event PressButtonAction OnAction;
 
 	public delegate void MoveAction(float x, bool jump, bool isGrounded);
 	public event MoveAction Move;
@@ -46,6 +47,9 @@ public class PlayerInputManager : MonoBehaviour
 
 		if (Input.GetButtonDown ("Moonlight") && OnMoonLight != null)
 			OnMoonLight ();
+
+		if (Input.GetButtonDown ("Action") && OnAction != null)
+			OnAction ();
 	}
 
 	void OnTriggerEnter2D (Collider2D other)

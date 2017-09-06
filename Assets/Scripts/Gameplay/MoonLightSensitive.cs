@@ -53,15 +53,8 @@ public class MoonLightSensitive : MonoBehaviour
 		isInThePast = false;
 		// Restore the present's layer
 		presentVersion.layer = presentLayer;
+		presentVersion.transform.position = pastVersion.transform.position;
 		pastVersion.SetActive (false);
-	}
-
-	void Update()
-	{
-		if (isInThePast)
-			transform.position = pastVersion.transform.position;
-		else
-			transform.position = presentVersion.transform.position;
 	}
 
 	void LateUpdate () 
@@ -71,6 +64,11 @@ public class MoonLightSensitive : MonoBehaviour
 		else if (!isInMoonLight && isInThePast)
 			OnMoonLightExit ();
 		isInMoonLight = false;
+
+		if (isInThePast)
+			transform.position = pastVersion.transform.position;
+		else
+			transform.position = presentVersion.transform.position;
 	}
 
 	public void OnMoonlight()
