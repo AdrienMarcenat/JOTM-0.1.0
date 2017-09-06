@@ -5,11 +5,7 @@ using UnityEngine.Collections;
 
 public class MoonLightManager : MonoBehaviour 
 {
-	[SerializeField] private GameObject moonLightRaycasterPrefab;
-	[SerializeField] private Vector3 step;
-	[SerializeField] private int moonLightRaycasterNumber = 20;
 	[SerializeField] private ShadowRenderer shadowRenderer;
-	private MoonLightRayCaster[] raycasters;
 	private bool past = false;
 
 	void OnEnable()
@@ -22,29 +18,11 @@ public class MoonLightManager : MonoBehaviour
 		PlayerInputManager.OnMoonLight -= EnableLight;
 	}
 
-	void Awake()
-	{
-		for (int i = 0; i < moonLightRaycasterNumber; i++)
-		{
-			GameObject raycaster = Instantiate (moonLightRaycasterPrefab, transform);
-			raycaster.transform.position = i * step + transform.position;
-			if (i != 0)
-			{
-				GameObject mirrorRaycaster = Instantiate (moonLightRaycasterPrefab, transform);
-				mirrorRaycaster.transform.position = -i * step + transform.position;
-			}
-		}
-
-		raycasters = GetComponentsInChildren<MoonLightRayCaster> ();
-	}
-
 	public void EnableLight()
 	{
 		past = !past;
 		StartCoroutine (ChangeTimeScale());
 		shadowRenderer.Enable();
-		foreach (MoonLightRayCaster raycaster in raycasters)
-			raycaster.Enable ();
 	}
 
 	/**

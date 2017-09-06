@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoonLightSensitive : MonoBehaviour 
 {
+	[SerializeField] private bool castShadow = true;
+
 	private GameObject presentVersion;
 	private GameObject pastVersion;
 	private FSM presentFSM;
@@ -74,5 +76,10 @@ public class MoonLightSensitive : MonoBehaviour
 	public void OnMoonlight()
 	{
 		this.isInMoonLight = true;
+	}
+
+	public bool GetCastShadow()
+	{
+		return castShadow;
 	}
 }

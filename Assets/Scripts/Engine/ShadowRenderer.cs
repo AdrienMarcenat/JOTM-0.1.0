@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ShadowRenderer : MonoBehaviour
 {
 	[SerializeField] private Transform lightDirection;
-	[SerializeField] private float raycastDistance;
+	[SerializeField] private float shadowDistance;
 	// raycastMargin is used to slightly shift the raycast in order avoid casting inside the collider
 	[SerializeField] private float raycastMargin = 0.05f;
 	// The layermask of the contact filter will determine which layers should cast shadows
@@ -72,42 +72,37 @@ public class ShadowRenderer : MonoBehaviour
 
 	private void SetShadows ()
 	{
+		bool castShadow = true;
+
 		for (int i = 0; i < allPolygonCollider.Length; i++)
 		{
 			PolygonCollider2D mf = allPolygonCollider [i];
+			castShadow = mf.gameObject.GetComponent<MoonLightSensitive> ().GetCastShadow ();
+
 			// Don't forget the offset, otherwise the point position will be wrong
 			Vector3 firstWorldPoint = mf.transform.TransformPoint (mf.points [0] + mf.offset);
 			Vector3 secondWorldPoint = Vector3.zero;
-			RaycastHit2D firstRaycast = Physics2D.Raycast (firstWorldPoint + raycastMargin * lightVector, lightVector, raycastDistance, contactFilter.layerMask);
-			RaycastHit2D secondRaycast;
 
-			/**
-			 * For each edge we cast two raycasts below from the endPoints,
-			 * this gives us four points defining a shadow polygon.
-			 **/
 			for (int j = 0; j < mf.GetTotalPointCount (); j++)
 			{
 				// The last edge is point n-1 and 0
 				int nextPointIndex = j == mf.GetTotalPointCount () - 1 ? 0 : j + 1;
-
 				secondWorldPoint = mf.transform.TransformPoint (mf.points [nextPointIndex] + mf.offset);
-				secondRaycast = Physics2D.Raycast (secondWorldPoint + raycastMargin * lightVector, lightVector, raycastDistance, contactFilter.layerMask);
 
-				Vector3 firstLowPoint = firstRaycast.point;
-				Vector3 secondLowPoint = secondRaycast.point;
-				// If we hit nothing the point will be at maximum distance
-				if (firstRaycast.collider == null)
-					firstLowPoint = firstWorldPoint + raycastDistance * lightVector;
-				if (secondRaycast.collider == null)
-					secondLowPoint = secondWorldPoint + raycastDistance * lightVector;
+				if (castShadow)
+				{
+					Vector3 firstLowPoint = firstWorldPoint + shadowDistance * lightVector;
+					Vector3 secondLowPoint = secondWorldPoint + shadowDistance * lightVector;
+					MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
+				}
 
-				Debug.DrawLine (firstWorldPoint, firstLowPoint, Color.yellow);
-				Debug.DrawLine (secondWorldPoint, secondLowPoint, Color.yellow);
-
-				MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
-
+				// For each vertex we cast a ray toward the light
+				RaycastHit2D raycast = Physics2D.Raycast (firstWorldPoint - raycastMargin * lightVector, - shadowDistance * lightVector, shadowDistance, contactFilter.layerMask);
+				// If nothing was hit the object is visible
+				if(raycast.collider == null)
+					mf.gameObject.SendMessage ("OnMoonlight");
+				
 				firstWorldPoint = secondWorldPoint;
-				firstRaycast = secondRaycast;
 			}
 		}
 	}
