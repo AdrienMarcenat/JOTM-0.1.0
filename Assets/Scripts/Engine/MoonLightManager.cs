@@ -21,7 +21,7 @@ public class MoonLightManager : MonoBehaviour
 	public void EnableLight()
 	{
 		past = !past;
-		StartCoroutine (ChangeTimeScale());
+		//StartCoroutine (ChangeTimeScale());
 		shadowRenderer.Enable();
 	}
 
