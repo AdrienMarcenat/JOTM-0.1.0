@@ -3,8 +3,10 @@ using System.Collections;
 
 public class PlayerInputManager : MonoBehaviour
 {
+	public delegate void MoonlightAction(bool enable);
+	public static event MoonlightAction OnMoonLight;
+
 	public delegate void PressButtonAction();
-	public static event PressButtonAction OnMoonLight;
 	public event PressButtonAction OnAction;
 
 	public delegate void MoveAction(float x, bool jump, bool isGrounded);
@@ -15,6 +17,7 @@ public class PlayerInputManager : MonoBehaviour
 	private Transform groundCheck;
 	private const float groundedRadius = .2f;
 	private bool isGrounded;
+	private bool moonlightEnable = false;
 
 	private void Awake()
 	{
@@ -46,15 +49,13 @@ public class PlayerInputManager : MonoBehaviour
 			Move (horizontal, jump, isGrounded);
 
 		if (Input.GetButtonDown ("Moonlight") && OnMoonLight != null)
-			OnMoonLight ();
+		{
+			moonlightEnable = !moonlightEnable;
+			OnMoonLight (moonlightEnable);
+		}
 
 		if (Input.GetButtonDown ("Action") && OnAction != null)
 			OnAction ();
-	}
-
-	void OnTriggerEnter2D (Collider2D other)
-	{
-		
 	}
 }
 

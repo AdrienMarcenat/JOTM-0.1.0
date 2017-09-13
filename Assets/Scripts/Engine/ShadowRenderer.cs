@@ -4,21 +4,15 @@ using System.Collections.Generic;
 
 public class ShadowRenderer : MonoBehaviour
 {
-	[SerializeField] private Transform lightDirection;
 	[SerializeField] private float shadowDistance;
-	// raycastMargin is used to slightly shift the raycast in order avoid casting inside the collider
-	[SerializeField] private float raycastMargin = 0.05f;
-	// The layermask of the contact filter will determine which layers should cast shadows
-	[SerializeField] private ContactFilter2D contactFilter;
 	[SerializeField] private Material shadowMaterial;
-	// Only objects overlapping the boxCollider will cast shadows
-	[SerializeField] private BoxCollider2D boxCollider;
 
+	private PolygonCollider2D polygonCollider;
+	private Transform lightDirection;
 	private Vector3 lightVector;
 	private Mesh shadowMesh;
 	private MeshRenderer meshRenderer;
 	private MeshFilter meshFilter;
-	private PolygonCollider2D[] allPolygonCollider;
 	private List<Mesh> meshes;
 	private bool isOn = false;
 
@@ -30,6 +24,9 @@ public class ShadowRenderer : MonoBehaviour
 		meshes = new List<Mesh> ();
 		shadowMesh = new Mesh ();
 
+		lightDirection = GameObject.FindGameObjectWithTag ("Light").transform;
+		polygonCollider = GetComponent<PolygonCollider2D> ();
+
 		meshRenderer = gameObject.AddComponent<MeshRenderer> ();
 		meshRenderer.sharedMaterial = shadowMaterial;
 		meshRenderer.enabled = false;
@@ -38,10 +35,20 @@ public class ShadowRenderer : MonoBehaviour
 		meshFilter.mesh = shadowMesh;
 	}
 
-	public void Enable ()
+	void OnEnable()
 	{
-		this.isOn = !isOn;
-		meshRenderer.enabled = !meshRenderer.enabled;
+		PlayerInputManager.OnMoonLight += OnMoonLight;
+	}
+
+	void OnDisable()
+	{
+		PlayerInputManager.OnMoonLight -= OnMoonLight;
+	}
+
+	public void OnMoonLight (bool enable)
+	{
+		isOn = enable;
+		meshRenderer.enabled = enable;
 	}
 
 	void Update ()
@@ -54,56 +61,27 @@ public class ShadowRenderer : MonoBehaviour
 		lightVector.Normalize ();
 
 		meshes.Clear ();
-		GetAllPolygonCollider ();
 		SetShadows ();
 		RenderShadowMesh ();
 	}
 
-	private void GetAllPolygonCollider ()
-	{
-		// Get all the collider of the relevant layers overlapping the boxCollider
-		Collider2D[] allColl2D = Physics2D.OverlapBoxAll (boxCollider.transform.position + (Vector3)boxCollider.offset, boxCollider.size, 0f, contactFilter.layerMask);
-		int numbreOfCollider = allColl2D.Length;
-
-		allPolygonCollider = new PolygonCollider2D[numbreOfCollider];
-		for (int i = 0; i < numbreOfCollider; i++)
-			allPolygonCollider[i] = (PolygonCollider2D)allColl2D[i];
-	}
-
 	private void SetShadows ()
 	{
-		bool castShadow = true;
+		// Don't forget the offset, otherwise the point position will be wrong
+		Vector3 firstWorldPoint = transform.TransformPoint (polygonCollider.points [0] + polygonCollider.offset);
+		Vector3 secondWorldPoint = Vector3.zero;
 
-		for (int i = 0; i < allPolygonCollider.Length; i++)
+		for (int j = 0; j < polygonCollider.GetTotalPointCount (); j++)
 		{
-			PolygonCollider2D mf = allPolygonCollider [i];
-			castShadow = mf.gameObject.GetComponent<MoonLightSensitive> ().GetCastShadow ();
+			// The last edge is point n-1 and 0
+			int nextPointIndex = j == polygonCollider.GetTotalPointCount () - 1 ? 0 : j + 1;
+			secondWorldPoint = transform.TransformPoint (polygonCollider.points [nextPointIndex] + polygonCollider.offset);
 
-			// Don't forget the offset, otherwise the point position will be wrong
-			Vector3 firstWorldPoint = mf.transform.TransformPoint (mf.points [0] + mf.offset);
-			Vector3 secondWorldPoint = Vector3.zero;
-
-			for (int j = 0; j < mf.GetTotalPointCount (); j++)
-			{
-				// The last edge is point n-1 and 0
-				int nextPointIndex = j == mf.GetTotalPointCount () - 1 ? 0 : j + 1;
-				secondWorldPoint = mf.transform.TransformPoint (mf.points [nextPointIndex] + mf.offset);
-
-				if (castShadow)
-				{
-					Vector3 firstLowPoint = firstWorldPoint + shadowDistance * lightVector;
-					Vector3 secondLowPoint = secondWorldPoint + shadowDistance * lightVector;
-					MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
-				}
-
-				// For each vertex we cast a ray toward the light
-				RaycastHit2D raycast = Physics2D.Raycast (firstWorldPoint - raycastMargin * lightVector, - shadowDistance * lightVector, shadowDistance, contactFilter.layerMask);
-				// If nothing was hit the object is visible
-				if(raycast.collider == null)
-					mf.gameObject.SendMessage ("OnMoonlight");
-				
-				firstWorldPoint = secondWorldPoint;
-			}
+			Vector3 firstLowPoint = firstWorldPoint + shadowDistance * lightVector;
+			Vector3 secondLowPoint = secondWorldPoint + shadowDistance * lightVector;
+			MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
+			
+			firstWorldPoint = secondWorldPoint;
 		}
 	}
 
@@ -114,7 +92,7 @@ public class ShadowRenderer : MonoBehaviour
 		for (int i = 0; i < meshes.Count; i++)
 		{
 			combine [i].mesh = meshes [i];
-			combine [i].transform = transform.localToWorldMatrix;
+			combine [i].transform = transform.worldToLocalMatrix;
 		}
 		shadowMesh.Clear ();
 		shadowMesh.CombineMeshes (combine);

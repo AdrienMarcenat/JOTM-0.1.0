@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Light
   layers:
   - Default
   - TransparentFX
@@ -15,11 +16,11 @@ TagManager:
   - 
   - Player
   - MoonlightSensitive
-  - Background
+  - 
   - Pickable
   - BackgroundImage
-  - 
-  - 
+  - Past
+  - Present
   - 
   - 
   - 

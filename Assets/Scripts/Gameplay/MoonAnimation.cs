@@ -7,7 +7,6 @@ public class MoonAnimation : MonoBehaviour
 	[SerializeField] private Image cloudImage;
 	[SerializeField] private Image moonImage;
 	[SerializeField] float animationSpeed;
-	private bool IsMoonVisible = false;
 
 	void OnEnable()
 	{
@@ -19,10 +18,9 @@ public class MoonAnimation : MonoBehaviour
 		PlayerInputManager.OnMoonLight -= OnMoonLight;
 	}
 
-	void OnMoonLight ()
+	void OnMoonLight (bool enable)
 	{
-		IsMoonVisible = !IsMoonVisible;
-		if(IsMoonVisible)
+		if(enable)
 			StartCoroutine (FadeIn ());
 		else
 			StartCoroutine (FadeOut ());

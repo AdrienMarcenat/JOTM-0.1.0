@@ -29,7 +29,7 @@ public class PlayerNormalState : FSMState
 		PlayerInputManager.OnMoonLight -= OnMoonLight;
 	}
 
-	private void OnMoonLight()
+	private void OnMoonLight(bool enable)
 	{
 		StartCoroutine (StopBody ());
 	}
