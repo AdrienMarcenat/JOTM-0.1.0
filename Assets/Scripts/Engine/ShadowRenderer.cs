@@ -6,6 +6,8 @@ public class ShadowRenderer : MonoBehaviour
 {
 	[SerializeField] private float shadowDistance;
 	[SerializeField] private Material shadowMaterial;
+	[SerializeField] private LayerMask layerMask;
+	[SerializeField] private float raycastMargin = 0.05f;
 
 	private PolygonCollider2D polygonCollider;
 	private Transform lightDirection;
@@ -67,6 +69,7 @@ public class ShadowRenderer : MonoBehaviour
 
 	private void SetShadows ()
 	{
+		Collider2D thisCollider = (Collider2D)polygonCollider;
 		// Don't forget the offset, otherwise the point position will be wrong
 		Vector3 firstWorldPoint = transform.TransformPoint (polygonCollider.points [0] + polygonCollider.offset);
 		Vector3 secondWorldPoint = Vector3.zero;
@@ -79,7 +82,11 @@ public class ShadowRenderer : MonoBehaviour
 
 			Vector3 firstLowPoint = firstWorldPoint + shadowDistance * lightVector;
 			Vector3 secondLowPoint = secondWorldPoint + shadowDistance * lightVector;
-			MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
+
+			RaycastHit2D firstRaycastHit = Physics2D.Raycast (firstWorldPoint + raycastMargin * lightVector, lightVector, shadowDistance, layerMask.value);
+			RaycastHit2D secondRaycastHit = Physics2D.Raycast (secondWorldPoint + raycastMargin * lightVector, lightVector, shadowDistance, layerMask.value);
+			if(firstRaycastHit.collider != thisCollider && secondRaycastHit.collider != thisCollider)
+				MakePolygon (firstWorldPoint, secondWorldPoint, secondLowPoint, firstLowPoint);
 			
 			firstWorldPoint = secondWorldPoint;
 		}
