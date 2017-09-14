@@ -69,6 +69,12 @@ public class FSM : MonoBehaviour
 		ApplyPendingChanges ();
 	}
 
+	public void FixedUpdate()
+	{
+		foreach (FSMState state in stateStack)
+			state.FixedUpdateState ();
+	}
+		
 	public void PushState(int stateID)
 	{
 		AddChange(new PendingChange(Action.Push, stateID));

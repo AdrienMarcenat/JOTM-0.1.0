@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ShadowRenderer : MonoBehaviour
 {
-	[SerializeField] private float shadowDistance;
+	[SerializeField] private float shadowDistance = 50f;
 	[SerializeField] private Material shadowMaterial;
 	[SerializeField] private LayerMask layerMask;
 	[SerializeField] private float raycastMargin = 0.05f;
@@ -26,7 +26,7 @@ public class ShadowRenderer : MonoBehaviour
 		meshes = new List<Mesh> ();
 		shadowMesh = new Mesh ();
 
-		lightDirection = GameObject.FindGameObjectWithTag ("Light").transform;
+		lightDirection = GameObject.Find ("MainLight").transform;
 		polygonCollider = GetComponent<PolygonCollider2D> ();
 
 		meshRenderer = gameObject.AddComponent<MeshRenderer> ();

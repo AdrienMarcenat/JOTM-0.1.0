@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Light
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
@@ -14,14 +15,14 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - MoonlightSensitive
-  - 
+  - PastPlayer
+  - PresentPlayer
+  - ShadowCaster
   - Pickable
   - BackgroundImage
   - Past
   - Present
-  - 
+  - Light
   - 
   - 
   - 

@@ -31,6 +31,9 @@ public abstract class FSMState : MonoBehaviour
 	// UpdateState is called when the state is in the stack and no higher state return true.
 	public virtual bool UpdateState () { return false; }
 
+	// FixedUpdateState wrap Unity's FixedUpdate
+	public virtual void FixedUpdateState () {}
+
 	// Exit is called when the state is popped
 	public virtual void Exit () {}
 

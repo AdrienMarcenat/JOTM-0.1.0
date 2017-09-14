@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 4091577160117968}
   - component: {fileID: 60649854298626994}
   - component: {fileID: 114337775020906814}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: ShadowRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -423,7 +423,7 @@ MonoBehaviour:
   shadowMaterial: {fileID: 2100000, guid: 69253bca13ff578488c4d38f52dbdb7a, type: 2}
   layerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1024
   raycastMargin: 0.05
 --- !u!114 &114387218854532680
 MonoBehaviour:

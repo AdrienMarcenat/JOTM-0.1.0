@@ -18,13 +18,13 @@ public class PlayerController : MonoBehaviour
 		renderingTransform = transform.Find ("Rendering");
 	}
 
-	public void Move (float xDir, bool jump, bool isGrounded)
+	public void Move (float xDir, bool jump, bool isGrounded, Vector2 platformVelocity)
 	{
 		// Only control the player if grounded or airControl is turned on
 		if (isGrounded || airControl)
 		{
 			// Move the character
-			rigidBody.velocity = new Vector2 (smoothSpeed * xDir, rigidBody.velocity.y);
+			rigidBody.velocity = new Vector2 (smoothSpeed * xDir, rigidBody.velocity.y) + platformVelocity;
 
 			// If the input is moving the player right and the player is facing left...
 			if (xDir > 0 && !facingRight)

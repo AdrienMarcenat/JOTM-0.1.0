@@ -9,11 +9,14 @@ public class PlayerInputManager : MonoBehaviour
 	public delegate void PressButtonAction();
 	public event PressButtonAction OnAction;
 
-	public delegate void MoveAction(float x, bool jump, bool isGrounded);
+	public delegate void MoveAction(float x, bool jump, bool isGrounded, Vector2 platformVelocity);
 	public event MoveAction Move;
 
+	[SerializeField] private float raycastFeetDistance = 0.25f;
 	[SerializeField] private LayerMask whatIsGround;
 
+	private Vector2 raycastFeetDirection = new Vector2 (0, -1);
+	private Vector2 platformVelocity = Vector2.zero;
 	private Transform groundCheck;
 	private const float groundedRadius = .2f;
 	private bool isGrounded;
@@ -27,6 +30,7 @@ public class PlayerInputManager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		isGrounded = false;
+		whatIsGround = Physics2D.GetLayerCollisionMask (groundCheck.gameObject.layer);
 
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
@@ -34,6 +38,8 @@ public class PlayerInputManager : MonoBehaviour
 		{
 			if (colliders[i].gameObject != gameObject)
 				isGrounded = true;
+			if (colliders [i].tag == "MovingPlatform")
+				platformVelocity = colliders [i].GetComponent<Rigidbody2D> ().velocity;
 		}
 	}
 
@@ -46,7 +52,7 @@ public class PlayerInputManager : MonoBehaviour
 		bool jump = Input.GetButtonDown ("Jump");
 
 		if(Move != null)
-			Move (horizontal, jump, isGrounded);
+			Move (horizontal, jump, isGrounded, platformVelocity);
 
 		if (Input.GetButtonDown ("Moonlight") && OnMoonLight != null)
 		{

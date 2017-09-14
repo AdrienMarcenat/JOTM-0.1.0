@@ -22,7 +22,7 @@ public class PlayerAnimator : MonoBehaviour
 		playerInputManager.Move -= MovePlayer;
 	}
 
-	private void MovePlayer (float x, bool jump, bool isGrounded)
+	private void MovePlayer (float x, bool jump, bool isGrounded, Vector2 platformVelocity)
 	{
 		if (x != 0)
 			animator.SetBool ("PlayerMove", true);
