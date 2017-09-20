@@ -13,8 +13,8 @@ public class PlayerInputManager : MonoBehaviour
 	public event MoveAction Move;
 
 	[SerializeField] private float raycastFeetDistance = 0.25f;
-	[SerializeField] private LayerMask whatIsGround;
 
+	private LayerMask whatIsGround;
 	private Vector2 raycastFeetDirection = new Vector2 (0, -1);
 	private Vector2 platformVelocity = Vector2.zero;
 	private Transform groundCheck;
@@ -36,7 +36,7 @@ public class PlayerInputManager : MonoBehaviour
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
-			if (colliders[i].gameObject != gameObject)
+			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("Light"))
 				isGrounded = true;
 			if (colliders [i].tag == "MovingPlatform")
 				platformVelocity = colliders [i].GetComponent<Rigidbody2D> ().velocity;
