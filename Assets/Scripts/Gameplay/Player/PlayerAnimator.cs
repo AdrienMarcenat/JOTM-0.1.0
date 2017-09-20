@@ -5,11 +5,13 @@ public class PlayerAnimator : MonoBehaviour
 {
 	private Animator animator;
 	private PlayerInputManager playerInputManager;
+	private Rigidbody2D body;
 
 	void Awake ()
 	{
-		animator = GetComponent<Animator> ();
+		animator = GetComponentInChildren<Animator> ();
 		playerInputManager = GetComponent<PlayerInputManager> ();
+		body = GetComponent<Rigidbody2D> ();
 	}
 
 	void OnEnable()
@@ -24,10 +26,10 @@ public class PlayerAnimator : MonoBehaviour
 
 	private void MovePlayer (float x, bool jump, bool isGrounded, Vector2 platformVelocity)
 	{
-		if (x != 0)
-			animator.SetBool ("PlayerMove", true);
-		else
-			animator.SetBool ("PlayerMove", false);
+		animator.SetBool ("grounded", isGrounded);
+		animator.SetBool ("move", x != 0);
+		animator.SetFloat ("vx", Mathf.Abs(x));
+		animator.SetFloat ("vy", body.velocity.y);
 	}
 }
 
